@@ -1,4 +1,5 @@
 export type InputMode = "corrente" | "potencia";
+export type PowerUnit = "W" | "kW" | "CV";
 export type SystemType = "monofasico" | "trifasico";
 export type InstallationType = "embutido" | "aparente" | "ar";
 export type InsulationType = "PVC" | "XLPE";
@@ -7,6 +8,7 @@ export interface CalculationInput {
   modo: InputMode;
   corrente?: number;
   potenciaKw?: number;
+  unidadePotencia?: PowerUnit;
   fatorPotencia?: number;
   sistema: SystemType;
   tensao: number;
@@ -24,6 +26,8 @@ export interface CalculationResult {
   secaoQueda: number;
   criterioLimitante: "ampacidade" | "queda" | "ambos";
   correnteProjeto: number;
+  quedaPercentual: number;
+  ampacidadeCorrigida: number;
 }
 
 export type AmpacityTable = {

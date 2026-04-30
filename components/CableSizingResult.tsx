@@ -13,9 +13,12 @@ function rotuloCriterio(c: CalculationResult["criterioLimitante"]): string {
   return "Ambos";
 }
 
+const numberFormatter = new Intl.NumberFormat("pt-BR", {
+  maximumFractionDigits: 2,
+});
+
 function formatarSecao(s: number): string {
-  const str = Number.isInteger(s) ? s.toFixed(0) : s.toString();
-  return `${str} mm²`;
+  return `${numberFormatter.format(s)} mm²`;
 }
 
 export default function CableSizingResult({ computed }: { computed: Computed }) {
@@ -61,11 +64,11 @@ export default function CableSizingResult({ computed }: { computed: Computed }) 
         </p>
       </div>
 
-      <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-3">
+      <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
         <div className="rounded-md border border-slate-200 p-3">
           <dt className="text-xs text-slate-500">Corrente de projeto</dt>
           <dd className="mt-0.5 font-medium">
-            {r.correnteProjeto.toFixed(2)} A
+            {numberFormatter.format(r.correnteProjeto)} A
           </dd>
         </div>
         <div className="rounded-md border border-slate-200 p-3">
@@ -77,6 +80,18 @@ export default function CableSizingResult({ computed }: { computed: Computed }) 
         <div className="rounded-md border border-slate-200 p-3">
           <dt className="text-xs text-slate-500">Por queda de tensão</dt>
           <dd className="mt-0.5 font-medium">{formatarSecao(r.secaoQueda)}</dd>
+        </div>
+        <div className="rounded-md border border-slate-200 p-3">
+          <dt className="text-xs text-slate-500">Queda calculada</dt>
+          <dd className="mt-0.5 font-medium">
+            {numberFormatter.format(r.quedaPercentual)}%
+          </dd>
+        </div>
+        <div className="rounded-md border border-slate-200 p-3">
+          <dt className="text-xs text-slate-500">Ampacidade corrigida</dt>
+          <dd className="mt-0.5 font-medium">
+            {numberFormatter.format(r.ampacidadeCorrigida)} A
+          </dd>
         </div>
       </dl>
     </div>

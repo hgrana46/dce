@@ -9,15 +9,24 @@ export function selecionarSecaoPorAmpacidade(
   input: CalculationInput,
   correnteProjeto: number
 ): number | null {
-  const tabela = ampacidade[input.isolacao][input.instalacao];
-  const fTemp = obterFatorTemperatura(input.isolacao, input.temperatura);
-  const fAgrup = fatorAgrupamento[input.agrupamento];
-
   for (const secao of SECOES_COMERCIAIS) {
-    const izBase = tabela[String(secao)];
-    if (!izBase || !Number.isFinite(izBase)) continue;
-    const izCorrigida = izBase * fTemp * fAgrup;
+    const izCorrigida = calcularAmpacidadeCorrigida(input, secao);
+    if (izCorrigida === null) continue;
     if (izCorrigida >= correnteProjeto) return secao;
   }
   return null;
+}
+
+export function calcularAmpacidadeCorrigida(
+  input: CalculationInput,
+  secao: number
+): number | null {
+  const tabela = ampacidade[input.isolacao][input.instalacao];
+  const izBase = tabela[String(secao)];
+  if (!izBase || !Number.isFinite(izBase)) return null;
+
+  const fTemp = obterFatorTemperatura(input.isolacao, input.temperatura);
+  const fAgrup = fatorAgrupamento[input.agrupamento];
+
+  return izBase * fTemp * fAgrup;
 }

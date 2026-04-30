@@ -4,6 +4,7 @@ import type {
   InputMode,
   InsulationType,
   InstallationType,
+  PowerUnit,
   SystemType,
 } from "@/types/eletrica";
 
@@ -11,6 +12,7 @@ export interface FormState {
   modo: InputMode;
   corrente: string;
   potenciaKw: string;
+  unidadePotencia: PowerUnit;
   fatorPotencia: string;
   sistema: SystemType;
   tensao: string;
@@ -26,6 +28,7 @@ export const estadoInicial: FormState = {
   modo: "corrente",
   corrente: "",
   potenciaKw: "",
+  unidadePotencia: "kW",
   fatorPotencia: "0.92",
   sistema: "monofasico",
   tensao: "220",
@@ -101,10 +104,10 @@ export default function CableSizingForm({ value, onChange, onReset }: Props) {
           />
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div className={sectionCls}>
             <label className={labelCls} htmlFor="potencia">
-              Potência (kW)
+              Potência
             </label>
             <input
               id="potencia"
@@ -115,6 +118,23 @@ export default function CableSizingForm({ value, onChange, onReset }: Props) {
               value={value.potenciaKw}
               onChange={(e) => set("potenciaKw", e.target.value)}
             />
+          </div>
+          <div className={sectionCls}>
+            <label className={labelCls} htmlFor="unidadePotencia">
+              Unidade
+            </label>
+            <select
+              id="unidadePotencia"
+              className={inputCls}
+              value={value.unidadePotencia}
+              onChange={(e) =>
+                set("unidadePotencia", e.target.value as PowerUnit)
+              }
+            >
+              <option value="W">W</option>
+              <option value="kW">kW</option>
+              <option value="CV">CV</option>
+            </select>
           </div>
           <div className={sectionCls}>
             <label className={labelCls} htmlFor="fp">

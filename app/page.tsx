@@ -16,7 +16,7 @@ type Computed =
 
 function formToInput(f: FormState): CalculationInput | null {
   const toNum = (v: string) => {
-    const n = Number(String(v).replace(",", "."));
+    const n = Number(String(v).trim().replace(",", "."));
     return Number.isFinite(n) ? n : NaN;
   };
 
@@ -34,6 +34,7 @@ function formToInput(f: FormState): CalculationInput | null {
     modo: f.modo,
     corrente: Number.isFinite(corrente) ? corrente : undefined,
     potenciaKw: Number.isFinite(potenciaKw) ? potenciaKw : undefined,
+    unidadePotencia: f.unidadePotencia,
     fatorPotencia: Number.isFinite(fatorPotencia) ? fatorPotencia : undefined,
     sistema: f.sistema,
     tensao,
@@ -62,8 +63,12 @@ export default function HomePage() {
     try {
       const resultado = calcular(input);
       return { status: "ok", resultado };
-    } catch {
-      return { status: "erro", mensagem: "Verifique os dados informados" };
+    } catch (error) {
+      return {
+        status: "erro",
+        mensagem:
+          error instanceof Error ? error.message : "Verifique os dados informados",
+      };
     }
   }, [form]);
 

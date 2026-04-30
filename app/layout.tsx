@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "DCE — Dimensionamento de Cabos Elétricos",
+  title: "DCE - Dimensionamento de Cabos Elétricos",
   description:
     "Dimensionamento de cabos de cobre em baixa tensão por ampacidade e queda de tensão.",
 };

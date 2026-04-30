@@ -1,4 +1,19 @@
-import type { CalculationInput } from "@/types/eletrica";
+import type { CalculationInput, PowerUnit } from "@/types/eletrica";
+
+const UNIDADES_POTENCIA: PowerUnit[] = ["W", "kW", "CV"];
+
+export function converterPotenciaParaWatts(
+  valor: number,
+  unidade: PowerUnit
+): number {
+  if (unidade === "W") return valor;
+  if (unidade === "kW") return valor * 1000;
+  return valor * 735.5;
+}
+
+function unidadePotenciaValida(unidade: unknown): unidade is PowerUnit {
+  return UNIDADES_POTENCIA.includes(unidade as PowerUnit);
+}
 
 export function calcularCorrenteProjeto(input: CalculationInput): number {
   if (input.modo === "corrente") {
@@ -9,13 +24,18 @@ export function calcularCorrenteProjeto(input: CalculationInput): number {
   }
 
   const p = input.potenciaKw;
+  const unidadePotencia = input.unidadePotencia ?? "kW";
   const fp = input.fatorPotencia;
   if (!p || p <= 0) throw new Error("Potência inválida");
+  if (!unidadePotenciaValida(unidadePotencia))
+    throw new Error("Unidade de potência inválida");
   if (!fp || fp <= 0 || fp > 1) throw new Error("Fator de potência inválido");
   if (!input.tensao || input.tensao <= 0) throw new Error("Tensão inválida");
 
+  const potenciaWatts = converterPotenciaParaWatts(p, unidadePotencia);
+
   if (input.sistema === "monofasico") {
-    return (p * 1000) / (input.tensao * fp);
+    return potenciaWatts / (input.tensao * fp);
   }
-  return (p * 1000) / (Math.sqrt(3) * input.tensao * fp);
+  return potenciaWatts / (Math.sqrt(3) * input.tensao * fp);
 }

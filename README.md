@@ -1,10 +1,10 @@
-# DCE — Dimensionamento de Cabos Elétricos
+# DCE - Dimensionamento de Cabos Elétricos
 
 MVP web para dimensionamento de cabos de cobre em baixa tensão, usando critérios simplificados inspirados na NBR 5410 (ampacidade + queda de tensão).
 
 ## Stack
 
-- Next.js 15 (App Router) + React 19
+- Next.js 14 (App Router) + React 18
 - TypeScript, Tailwind CSS
 - Pronto para deploy na Vercel
 

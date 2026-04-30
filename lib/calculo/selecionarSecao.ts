@@ -1,7 +1,13 @@
 import type { CalculationInput, CalculationResult } from "@/types/eletrica";
 import { calcularCorrenteProjeto } from "./calcularCorrente";
-import { selecionarSecaoPorAmpacidade } from "./calcularAmpacidade";
-import { selecionarSecaoPorQueda } from "./calcularQuedaTensao";
+import {
+  calcularAmpacidadeCorrigida,
+  selecionarSecaoPorAmpacidade,
+} from "./calcularAmpacidade";
+import {
+  calcularQuedaPercentual,
+  selecionarSecaoPorQueda,
+} from "./calcularQuedaTensao";
 
 export function validarEntrada(input: CalculationInput): string | null {
   if (!input.tensao || input.tensao <= 0) return "Tensão inválida";
@@ -17,6 +23,11 @@ export function validarEntrada(input: CalculationInput): string | null {
     if (!input.corrente || input.corrente <= 0) return "Corrente inválida";
   } else {
     if (!input.potenciaKw || input.potenciaKw <= 0) return "Potência inválida";
+    if (
+      input.unidadePotencia &&
+      !(["W", "kW", "CV"] as const).includes(input.unidadePotencia)
+    )
+      return "Unidade de potência inválida";
     if (
       !input.fatorPotencia ||
       input.fatorPotencia <= 0 ||
@@ -52,6 +63,16 @@ export function calcular(input: CalculationInput): CalculationResult {
       : secaoAmp > secaoQueda
       ? "ampacidade"
       : "ambos";
+  const quedaPercentual = calcularQuedaPercentual(
+    input,
+    correnteProjeto,
+    secaoFinal
+  );
+  const ampacidadeCorrigida = calcularAmpacidadeCorrigida(input, secaoFinal);
+
+  if (quedaPercentual === null || ampacidadeCorrigida === null) {
+    throw new Error("Não foi possível detalhar o resultado calculado");
+  }
 
   return {
     secaoFinal,
@@ -59,5 +80,7 @@ export function calcular(input: CalculationInput): CalculationResult {
     secaoQueda: secaoQueda,
     criterioLimitante,
     correnteProjeto,
+    quedaPercentual,
+    ampacidadeCorrigida,
   };
 }
