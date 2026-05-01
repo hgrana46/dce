@@ -13,6 +13,7 @@ import {
   descreverCombinacao,
   listarCombinacoes,
 } from "./combinacoes";
+import { selecionarDisjuntor } from "./selecionarDisjuntor";
 
 export function validarEntrada(input: CalculationInput): string | null {
   if (!(["monofasico", "bifasico", "trifasico"] as const).includes(input.sistema))
@@ -100,13 +101,33 @@ export function calcular(input: CalculationInput): CalculationResult {
       ampacidade !== null &&
       queda !== null &&
       ampacidade >= correnteProjeto &&
-      queda <= input.quedaMaximaPercentual
+      queda <= input.quedaMaximaPercentual &&
+      selecionarDisjuntor(correnteProjeto, ampacidade) !== null
     );
   });
 
   if (!combinacaoFinal) {
     throw new Error(
       "Nenhuma combinação atende aos critérios com o limite de cabos em paralelo e seções disponíveis"
+    );
+  }
+
+  const ampacidadeFinal = calcularAmpacidadeCorrigida(
+    input,
+    combinacaoFinal.secao,
+    combinacaoFinal.quantidadeCabos
+  );
+  if (ampacidadeFinal === null) {
+    throw new Error("Ampacidade final inválida");
+  }
+
+  const disjuntorRecomendado = selecionarDisjuntor(
+    correnteProjeto,
+    ampacidadeFinal
+  );
+  if (disjuntorRecomendado === null) {
+    throw new Error(
+      "Nenhum disjuntor padronizado atende a Ib <= In <= Iz para a seção selecionada"
     );
   }
 
@@ -120,5 +141,7 @@ export function calcular(input: CalculationInput): CalculationResult {
     quantidadeCabosQueda: combinacaoQueda.quantidadeCabos,
     criterioLimitante,
     correnteProjeto,
+    ampacidadeFinal,
+    disjuntorRecomendado,
   };
 }

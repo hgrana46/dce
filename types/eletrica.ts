@@ -31,6 +31,8 @@ export interface CalculationResult {
   quantidadeCabosQueda: number;
   criterioLimitante: "ampacidade" | "queda" | "ambos";
   correnteProjeto: number;
+  ampacidadeFinal: number;
+  disjuntorRecomendado: number;
 }
 
 export type AmpacityTable = {

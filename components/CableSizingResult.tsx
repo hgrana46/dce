@@ -77,6 +77,18 @@ export default function CableSizingResult({ computed }: { computed: Computed }) 
           </dd>
         </div>
         <div className="rounded-md border border-slate-200 p-3">
+          <dt className="text-xs text-slate-500">Disjuntor recomendado</dt>
+          <dd className="mt-0.5 font-medium">
+            {numberFormatter.format(r.disjuntorRecomendado)} A
+          </dd>
+        </div>
+        <div className="rounded-md border border-slate-200 p-3">
+          <dt className="text-xs text-slate-500">Ampacidade corrigida</dt>
+          <dd className="mt-0.5 font-medium">
+            {numberFormatter.format(r.ampacidadeFinal)} A
+          </dd>
+        </div>
+        <div className="rounded-md border border-slate-200 p-3">
           <dt className="text-xs text-slate-500">Por ampacidade</dt>
           <dd className="mt-0.5 font-medium">
             {formatarCombinacao(

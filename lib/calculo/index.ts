@@ -12,3 +12,4 @@ export {
   selecionarSecaoPorQueda,
 } from "./calcularQuedaTensao";
 export { descreverCombinacao, listarCombinacoes } from "./combinacoes";
+export { selecionarDisjuntor } from "./selecionarDisjuntor";
