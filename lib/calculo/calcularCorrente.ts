@@ -34,8 +34,12 @@ export function calcularCorrenteProjeto(input: CalculationInput): number {
 
   const potenciaWatts = converterPotenciaParaWatts(p, unidadePotencia);
 
-  if (input.sistema === "monofasico") {
+  if (input.sistema === "trifasico") {
+    return potenciaWatts / (Math.sqrt(3) * input.tensao * fp);
+  }
+  if (input.sistema === "monofasico" || input.sistema === "bifasico") {
     return potenciaWatts / (input.tensao * fp);
   }
-  return potenciaWatts / (Math.sqrt(3) * input.tensao * fp);
+
+  throw new Error("Sistema inválido");
 }

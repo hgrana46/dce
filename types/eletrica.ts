@@ -1,6 +1,6 @@
 export type InputMode = "corrente" | "potencia";
 export type PowerUnit = "W" | "kW" | "CV";
-export type SystemType = "monofasico" | "trifasico";
+export type SystemType = "monofasico" | "bifasico" | "trifasico";
 export type InstallationType = "embutido" | "aparente" | "ar";
 export type InsulationType = "PVC" | "XLPE";
 

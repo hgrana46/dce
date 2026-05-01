@@ -15,6 +15,8 @@ import {
 } from "./combinacoes";
 
 export function validarEntrada(input: CalculationInput): string | null {
+  if (!(["monofasico", "bifasico", "trifasico"] as const).includes(input.sistema))
+    return "Sistema inválido";
   if (!input.tensao || input.tensao <= 0) return "Tensão inválida";
   if (!input.comprimento || input.comprimento <= 0)
     return "Comprimento inválido";

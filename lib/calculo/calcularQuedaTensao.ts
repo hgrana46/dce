@@ -43,10 +43,17 @@ export function calcularQuedaPercentual(
   if (quantidadeCabos > 1 && secao < 50) return null;
   const rMetro = rKm / 1000 / quantidadeCabos;
 
+  const fatorSistema =
+    input.sistema === "trifasico"
+      ? Math.sqrt(3)
+      : input.sistema === "monofasico" || input.sistema === "bifasico"
+      ? 2
+      : null;
+
+  if (fatorSistema === null) return null;
+
   const deltaV =
-    input.sistema === "monofasico"
-      ? 2 * input.comprimento * correnteProjeto * rMetro
-      : Math.sqrt(3) * input.comprimento * correnteProjeto * rMetro;
+    fatorSistema * input.comprimento * correnteProjeto * rMetro;
 
   return (deltaV / input.tensao) * 100;
 }

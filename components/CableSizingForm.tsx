@@ -52,6 +52,11 @@ const labelCls = "block text-sm font-medium text-slate-700 mb-1";
 const inputCls =
   "w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500";
 const sectionCls = "space-y-1";
+const sistemas: [SystemType, string][] = [
+  ["monofasico", "Monofásico"],
+  ["bifasico", "Bifásico"],
+  ["trifasico", "Trifásico"],
+];
 
 export default function CableSizingForm({ value, onChange, onReset }: Props) {
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
@@ -159,7 +164,7 @@ export default function CableSizingForm({ value, onChange, onReset }: Props) {
       <div className={sectionCls}>
         <span className={labelCls}>Sistema</span>
         <div className="flex gap-2">
-          {(["monofasico", "trifasico"] as SystemType[]).map((s) => (
+          {sistemas.map(([s, label]) => (
             <button
               key={s}
               type="button"
@@ -170,7 +175,7 @@ export default function CableSizingForm({ value, onChange, onReset }: Props) {
                   : "border-slate-300 bg-white text-slate-700"
               }`}
             >
-              {s === "monofasico" ? "Monofásico" : "Trifásico"}
+              {label}
             </button>
           ))}
         </div>
