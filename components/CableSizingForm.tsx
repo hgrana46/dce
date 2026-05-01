@@ -34,7 +34,7 @@ export const estadoInicial: FormState = {
   sistema: "monofasico",
   tensao: "220",
   comprimento: "",
-  cabosParalelos: 1,
+  cabosParalelos: 4,
   quedaMaximaPercentual: 4,
   instalacao: "embutido",
   isolacao: "PVC",
@@ -219,7 +219,7 @@ export default function CableSizingForm({ value, onChange, onReset }: Props) {
       </div>
 
       <div className={sectionCls}>
-        <span className={labelCls}>Máximo de cabos em paralelo por fase</span>
+        <span className={labelCls}>Cabos em paralelo por fase (máximo)</span>
         <div className="flex gap-2">
           {[1, 2, 3, 4].map((n) => (
             <button

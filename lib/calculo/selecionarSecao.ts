@@ -64,7 +64,9 @@ export function calcular(input: CalculationInput): CalculationResult {
   const combinacaoQueda = selecionarCombinacaoPorQueda(input, correnteProjeto);
 
   if (combinacaoAmp === null || combinacaoQueda === null) {
-    throw new Error("Nenhuma combinação atende aos critérios");
+    throw new Error(
+      "Nenhuma combinação atende aos critérios com o limite de cabos em paralelo e seções disponíveis"
+    );
   }
 
   const areaAmp = areaTotal(combinacaoAmp);
@@ -101,7 +103,9 @@ export function calcular(input: CalculationInput): CalculationResult {
   });
 
   if (!combinacaoFinal) {
-    throw new Error("Nenhuma combinação atende aos critérios");
+    throw new Error(
+      "Nenhuma combinação atende aos critérios com o limite de cabos em paralelo e seções disponíveis"
+    );
   }
 
   return {
