@@ -13,6 +13,7 @@ export interface CalculationInput {
   sistema: SystemType;
   tensao: number;
   comprimento: number;
+  cabosParalelos?: 1 | 2 | 3 | 4;
   quedaMaximaPercentual: 2 | 3 | 4 | 5;
   instalacao: InstallationType;
   isolacao: InsulationType;
@@ -22,12 +23,14 @@ export interface CalculationInput {
 
 export interface CalculationResult {
   secaoFinal: number;
+  quantidadeCabos: number;
+  descricaoFinal: string;
   secaoAmpacidade: number;
+  quantidadeCabosAmpacidade: number;
   secaoQueda: number;
+  quantidadeCabosQueda: number;
   criterioLimitante: "ampacidade" | "queda" | "ambos";
   correnteProjeto: number;
-  quedaPercentual: number;
-  ampacidadeCorrigida: number;
 }
 
 export type AmpacityTable = {

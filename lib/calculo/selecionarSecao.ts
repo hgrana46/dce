@@ -2,12 +2,17 @@ import type { CalculationInput, CalculationResult } from "@/types/eletrica";
 import { calcularCorrenteProjeto } from "./calcularCorrente";
 import {
   calcularAmpacidadeCorrigida,
-  selecionarSecaoPorAmpacidade,
+  selecionarCombinacaoPorAmpacidade,
 } from "./calcularAmpacidade";
 import {
   calcularQuedaPercentual,
-  selecionarSecaoPorQueda,
+  selecionarCombinacaoPorQueda,
 } from "./calcularQuedaTensao";
+import {
+  areaTotal,
+  descreverCombinacao,
+  listarCombinacoes,
+} from "./combinacoes";
 
 export function validarEntrada(input: CalculationInput): string | null {
   if (!input.tensao || input.tensao <= 0) return "Tensão inválida";
@@ -16,6 +21,11 @@ export function validarEntrada(input: CalculationInput): string | null {
   if (!Number.isFinite(input.temperatura)) return "Temperatura inválida";
   if (input.temperatura < -20 || input.temperatura > 80)
     return "Temperatura fora de faixa razoável";
+  if (
+    input.cabosParalelos !== undefined &&
+    !([1, 2, 3, 4] as const).includes(input.cabosParalelos)
+  )
+    return "Quantidade de cabos inválida";
   if (input.agrupamento < 1 || input.agrupamento > 6)
     return "Agrupamento inválido";
 
@@ -47,40 +57,62 @@ export function calcular(input: CalculationInput): CalculationResult {
     throw new Error("Corrente de projeto inválida");
   }
 
-  const secaoAmp = selecionarSecaoPorAmpacidade(input, correnteProjeto);
-  const secaoQueda = selecionarSecaoPorQueda(input, correnteProjeto);
+  const combinacaoAmp = selecionarCombinacaoPorAmpacidade(
+    input,
+    correnteProjeto
+  );
+  const combinacaoQueda = selecionarCombinacaoPorQueda(input, correnteProjeto);
 
-  if (secaoAmp === null || secaoQueda === null) {
-    throw new Error(
-      "Nenhuma seção comercial atende aos critérios — reveja os dados"
-    );
+  if (combinacaoAmp === null || combinacaoQueda === null) {
+    throw new Error("Nenhuma combinação atende aos critérios");
   }
 
-  const secaoFinal = Math.max(secaoAmp, secaoQueda);
+  const areaAmp = areaTotal(combinacaoAmp);
+  const areaQueda = areaTotal(combinacaoQueda);
   const criterioLimitante: CalculationResult["criterioLimitante"] =
-    secaoQueda > secaoAmp
+    areaQueda > areaAmp
       ? "queda"
-      : secaoAmp > secaoQueda
+      : areaAmp > areaQueda
       ? "ampacidade"
       : "ambos";
-  const quedaPercentual = calcularQuedaPercentual(
-    input,
-    correnteProjeto,
-    secaoFinal
-  );
-  const ampacidadeCorrigida = calcularAmpacidadeCorrigida(input, secaoFinal);
 
-  if (quedaPercentual === null || ampacidadeCorrigida === null) {
-    throw new Error("Não foi possível detalhar o resultado calculado");
+  const areaMinima = Math.max(areaAmp, areaQueda);
+  const combinacaoFinal = listarCombinacoes(input).find((combinacao) => {
+    if (areaTotal(combinacao) < areaMinima) return false;
+
+    const ampacidade = calcularAmpacidadeCorrigida(
+      input,
+      combinacao.secao,
+      combinacao.quantidadeCabos
+    );
+    const queda = calcularQuedaPercentual(
+      input,
+      correnteProjeto,
+      combinacao.secao,
+      combinacao.quantidadeCabos
+    );
+
+    return (
+      ampacidade !== null &&
+      queda !== null &&
+      ampacidade >= correnteProjeto &&
+      queda <= input.quedaMaximaPercentual
+    );
+  });
+
+  if (!combinacaoFinal) {
+    throw new Error("Nenhuma combinação atende aos critérios");
   }
 
   return {
-    secaoFinal,
-    secaoAmpacidade: secaoAmp,
-    secaoQueda: secaoQueda,
+    secaoFinal: combinacaoFinal.secao,
+    quantidadeCabos: combinacaoFinal.quantidadeCabos,
+    descricaoFinal: descreverCombinacao(combinacaoFinal),
+    secaoAmpacidade: combinacaoAmp.secao,
+    quantidadeCabosAmpacidade: combinacaoAmp.quantidadeCabos,
+    secaoQueda: combinacaoQueda.secao,
+    quantidadeCabosQueda: combinacaoQueda.quantidadeCabos,
     criterioLimitante,
     correnteProjeto,
-    quedaPercentual,
-    ampacidadeCorrigida,
   };
 }

@@ -17,6 +17,7 @@ export interface FormState {
   sistema: SystemType;
   tensao: string;
   comprimento: string;
+  cabosParalelos: 1 | 2 | 3 | 4;
   quedaMaximaPercentual: 2 | 3 | 4 | 5;
   instalacao: InstallationType;
   isolacao: InsulationType;
@@ -33,6 +34,7 @@ export const estadoInicial: FormState = {
   sistema: "monofasico",
   tensao: "220",
   comprimento: "",
+  cabosParalelos: 1,
   quedaMaximaPercentual: 4,
   instalacao: "embutido",
   isolacao: "PVC",
@@ -214,6 +216,26 @@ export default function CableSizingForm({ value, onChange, onReset }: Props) {
           value={value.comprimento}
           onChange={(e) => set("comprimento", e.target.value)}
         />
+      </div>
+
+      <div className={sectionCls}>
+        <span className={labelCls}>Máximo de cabos em paralelo por fase</span>
+        <div className="flex gap-2">
+          {[1, 2, 3, 4].map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => set("cabosParalelos", n as 1 | 2 | 3 | 4)}
+              className={`w-10 rounded-md border px-0 py-1.5 text-sm ${
+                value.cabosParalelos === n
+                  ? "border-slate-900 bg-slate-900 text-white"
+                  : "border-slate-300 bg-white text-slate-700"
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className={sectionCls}>

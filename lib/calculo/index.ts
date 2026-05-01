@@ -3,5 +3,12 @@ export {
   calcularCorrenteProjeto,
   converterPotenciaParaWatts,
 } from "./calcularCorrente";
-export { selecionarSecaoPorAmpacidade } from "./calcularAmpacidade";
-export { selecionarSecaoPorQueda } from "./calcularQuedaTensao";
+export {
+  selecionarCombinacaoPorAmpacidade,
+  selecionarSecaoPorAmpacidade,
+} from "./calcularAmpacidade";
+export {
+  selecionarCombinacaoPorQueda,
+  selecionarSecaoPorQueda,
+} from "./calcularQuedaTensao";
+export { descreverCombinacao, listarCombinacoes } from "./combinacoes";

@@ -39,6 +39,7 @@ function formToInput(f: FormState): CalculationInput | null {
     sistema: f.sistema,
     tensao,
     comprimento,
+    cabosParalelos: f.cabosParalelos,
     quedaMaximaPercentual: f.quedaMaximaPercentual,
     instalacao: f.instalacao,
     isolacao: f.isolacao,

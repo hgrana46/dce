@@ -21,6 +21,11 @@ function formatarSecao(s: number): string {
   return `${numberFormatter.format(s)} mm²`;
 }
 
+function formatarCombinacao(secao: number, quantidadeCabos: number): string {
+  if (quantidadeCabos === 1) return formatarSecao(secao);
+  return `${quantidadeCabos} × ${formatarSecao(secao)} por fase`;
+}
+
 export default function CableSizingResult({ computed }: { computed: Computed }) {
   if (computed.status === "inicial") {
     return (
@@ -55,7 +60,7 @@ export default function CableSizingResult({ computed }: { computed: Computed }) 
         <p className="text-xs uppercase tracking-wide text-slate-300">
           Seção recomendada
         </p>
-        <p className="mt-1 text-4xl font-bold">{formatarSecao(r.secaoFinal)}</p>
+        <p className="mt-1 text-4xl font-bold">{r.descricaoFinal}</p>
         <p className="mt-2 text-sm text-slate-300">
           Critério limitante:{" "}
           <span className="font-medium text-white">
@@ -74,23 +79,16 @@ export default function CableSizingResult({ computed }: { computed: Computed }) 
         <div className="rounded-md border border-slate-200 p-3">
           <dt className="text-xs text-slate-500">Por ampacidade</dt>
           <dd className="mt-0.5 font-medium">
-            {formatarSecao(r.secaoAmpacidade)}
+            {formatarCombinacao(
+              r.secaoAmpacidade,
+              r.quantidadeCabosAmpacidade
+            )}
           </dd>
         </div>
         <div className="rounded-md border border-slate-200 p-3">
           <dt className="text-xs text-slate-500">Por queda de tensão</dt>
-          <dd className="mt-0.5 font-medium">{formatarSecao(r.secaoQueda)}</dd>
-        </div>
-        <div className="rounded-md border border-slate-200 p-3">
-          <dt className="text-xs text-slate-500">Queda calculada</dt>
           <dd className="mt-0.5 font-medium">
-            {numberFormatter.format(r.quedaPercentual)}%
-          </dd>
-        </div>
-        <div className="rounded-md border border-slate-200 p-3">
-          <dt className="text-xs text-slate-500">Ampacidade corrigida</dt>
-          <dd className="mt-0.5 font-medium">
-            {numberFormatter.format(r.ampacidadeCorrigida)} A
+            {formatarCombinacao(r.secaoQueda, r.quantidadeCabosQueda)}
           </dd>
         </div>
       </dl>
