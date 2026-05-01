@@ -51,6 +51,7 @@ function formToInput(f: FormState): CalculationInput | null {
 function temEntradaSuficiente(f: FormState): boolean {
   if (!f.tensao || !f.comprimento || !f.temperatura) return false;
   if (f.modo === "corrente") return !!f.corrente;
+  if (f.unidadePotencia === "kVA") return !!f.potenciaKw;
   return !!f.potenciaKw && !!f.fatorPotencia;
 }
 

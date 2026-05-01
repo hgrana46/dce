@@ -38,13 +38,14 @@ export function validarEntrada(input: CalculationInput): string | null {
     if (!input.potenciaKw || input.potenciaKw <= 0) return "Potência inválida";
     if (
       input.unidadePotencia &&
-      !(["W", "kW", "CV"] as const).includes(input.unidadePotencia)
+      !(["W", "kW", "kVA", "CV"] as const).includes(input.unidadePotencia)
     )
       return "Unidade de potência inválida";
     if (
-      !input.fatorPotencia ||
-      input.fatorPotencia <= 0 ||
-      input.fatorPotencia > 1
+      input.unidadePotencia !== "kVA" &&
+      (!input.fatorPotencia ||
+        input.fatorPotencia <= 0 ||
+        input.fatorPotencia > 1)
     )
       return "Fator de potência inválido";
   }

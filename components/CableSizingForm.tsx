@@ -140,24 +140,27 @@ export default function CableSizingForm({ value, onChange, onReset }: Props) {
             >
               <option value="W">W</option>
               <option value="kW">kW</option>
+              <option value="kVA">kVA</option>
               <option value="CV">CV</option>
             </select>
           </div>
-          <div className={sectionCls}>
-            <label className={labelCls} htmlFor="fp">
-              Fator de potência
-            </label>
-            <input
-              id="fp"
-              type="number"
-              min={0}
-              max={1}
-              step="0.01"
-              className={inputCls}
-              value={value.fatorPotencia}
-              onChange={(e) => set("fatorPotencia", e.target.value)}
-            />
-          </div>
+          {value.unidadePotencia !== "kVA" && (
+            <div className={sectionCls}>
+              <label className={labelCls} htmlFor="fp">
+                Fator de potência
+              </label>
+              <input
+                id="fp"
+                type="number"
+                min={0}
+                max={1}
+                step="0.01"
+                className={inputCls}
+                value={value.fatorPotencia}
+                onChange={(e) => set("fatorPotencia", e.target.value)}
+              />
+            </div>
+          )}
         </div>
       )}
 
