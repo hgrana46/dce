@@ -10,3 +10,26 @@ html,
 body {
   height: 100%;
 }
+
+@media print {
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    background: white;
+  }
+
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  section {
+    box-shadow: none !important;
+  }
+
+  * {
+    print-color-adjust: exact;
+  }
+}

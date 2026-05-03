@@ -57,6 +57,8 @@ function temEntradaSuficiente(f: FormState): boolean {
 
 export default function HomePage() {
   const [form, setForm] = useState<FormState>(estadoInicial);
+  const [endereco, setEndereco] = useState("");
+  const [descricao, setDescricao] = useState("");
 
   const computed: Computed = useMemo(() => {
     if (!temEntradaSuficiente(form)) return { status: "inicial" };
@@ -83,6 +85,47 @@ export default function HomePage() {
         <p className="text-sm text-slate-600">
           Cobre, baixa tensão — critério NBR 5410 (versão simplificada).
         </p>
+        <div className="mt-5 grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end print:grid-cols-2">
+          <div className="space-y-1">
+            <label
+              className="block text-sm font-medium text-slate-700"
+              htmlFor="endereco"
+            >
+              Endereço
+            </label>
+            <input
+              id="endereco"
+              type="text"
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+              value={endereco}
+              onChange={(e) => setEndereco(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label
+              className="block text-sm font-medium text-slate-700"
+              htmlFor="descricao"
+            >
+              Descrição
+            </label>
+            <input
+              id="descricao"
+              type="text"
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="rounded-md border border-slate-900 bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-slate-700 print:hidden"
+          >
+            Gerar impressão
+          </button>
+        </div>
       </header>
 
       <div className="grid gap-6 md:grid-cols-2">
